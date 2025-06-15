@@ -1,19 +1,36 @@
 // src/layout/Navbar.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoHomeSharp, IoLogIn } from "react-icons/io5";
 import { MdExplore, MdOutlineContactSupport } from "react-icons/md";
 import { FaUserCircle, FaMusic } from "react-icons/fa";
-import Dropdown from "./Dropdown";
 import Avatar from "../assets/avatar.png";
 
 const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   // 🔐 Replace with Firebase user later
   const user = { username: "Guest", avatar: Avatar };
+
+  const toggleDropdown = () => setDropdownOpen((prev) => !prev);
+  const handleNavClick = () => setDropdownOpen(false);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target) &&
+        !e.target.closest(".hover-darken")
+      ) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -22,16 +39,63 @@ const MyNavbar = () => {
           {/* left side */}
           <div>
             <Nav.Link as={NavLink} to='/' style={logoText}>
-              <h3>Audio Visualiser App</h3>
+              <h3 className='hover-darken'>Audio Visualiser App</h3>
             </Nav.Link>
           </div>
           {/* Right side  */}
-          <div style={rightSide}>
-            <span>{user.username}</span>
+          <div
+            style={rightSide}
+            onClick={toggleDropdown}
+            className='hover-darken'
+          >
+            <span style={usernameStyle}>{user.username}</span>
             <img src={user.avatar} alt='user Avatar' style={avatarStyle} />
           </div>
         </Container>
       </Navbar>
+
+      <div
+        ref={dropdownRef}
+        className={`dropdown-container ${dropdownOpen ? "show" : ""}`}
+        style={dropdown}
+      >
+        <Nav.Link
+          as={NavLink}
+          to='/'
+          style={dropdownItem}
+          onClick={handleNavClick}
+          className='hover-darken'
+        >
+          Home
+        </Nav.Link>
+        <Nav.Link
+          as={NavLink}
+          to='/profile'
+          style={dropdownItem}
+          onClick={handleNavClick}
+          className='hover-darken'
+        >
+          Profile
+        </Nav.Link>
+        <Nav.Link
+          as={NavLink}
+          to='/settings'
+          style={dropdownItem}
+          onClick={handleNavClick}
+          className='hover-darken'
+        >
+          Settings
+        </Nav.Link>
+        <Nav.Link
+          as={NavLink}
+          to='/login'
+          style={dropdownItem}
+          onClick={handleNavClick}
+          className='hover-darken'
+        >
+          Logout
+        </Nav.Link>
+      </div>
     </>
   );
 };
@@ -53,6 +117,7 @@ const rightSide = {
   display: "flex",
   alignItems: "center",
   gap: "10px",
+  cursor: "pointer",
 };
 
 const avatarStyle = {
@@ -70,6 +135,27 @@ const usernameStyle = {
 const logoText = {
   color: "#fff",
   textDecoration: "none",
+};
+
+const dropdown = {
+  position: "absolute",
+  top: "85px",
+  right: "5px",
+  backgroundColor: " rgba(22, 22, 23, 0.9)",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  borderRadius: "8px",
+  padding: "10px",
+  minWidth: "150px",
+  maxWidth: "200px",
+  textAlign: "center",
+  zIndex: 10000,
+};
+
+const dropdownItem = {
+  color: "#fff",
+  padding: "8px 12px",
+  textDecoration: "none",
+  display: "block",
 };
 
 export default MyNavbar;
