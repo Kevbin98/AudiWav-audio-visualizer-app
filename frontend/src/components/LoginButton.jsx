@@ -2,6 +2,7 @@
 import React from "react";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase/firebaseConfig";
+import { Button } from "react-bootstrap";
 
 const LoginButton = () => {
   const handleLogin = async () => {
@@ -15,7 +16,11 @@ const LoginButton = () => {
     }
   };
 
-  return <button onClick={handleLogin}>Sign in with Google</button>;
+  return (
+    <Button onClick={handleLogin} variant='dark'>
+      Sign in with Google
+    </Button>
+  );
 };
 
 export default LoginButton;

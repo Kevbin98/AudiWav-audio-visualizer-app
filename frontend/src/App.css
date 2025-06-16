@@ -22,6 +22,10 @@ a {
   color: white;
 }
 
+a:hover {
+  color: grey;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);

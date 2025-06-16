@@ -93,7 +93,7 @@ const MyNavbar = () => {
           onClick={handleNavClick}
           className='hover-darken'
         >
-          Logout
+          Login
         </Nav.Link>
       </div>
     </>
@@ -104,6 +104,7 @@ const navbarStyle = {
   backgroundColor: " rgba(22, 22, 23, 0.9)",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.9)",
   padding: "10px",
+  paddingTop: "15px",
   zIndex: 9999,
 };
 
@@ -139,7 +140,7 @@ const logoText = {
 
 const dropdown = {
   position: "absolute",
-  top: "85px",
+  top: "80px",
   right: "5px",
   backgroundColor: " rgba(22, 22, 23, 0.9)",
   boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
