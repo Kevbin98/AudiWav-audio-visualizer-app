@@ -10,6 +10,8 @@ import SignupForm from "./pages/Signup";
 import { LoaderProvider } from "./context/LoaderContext";
 import TopLoader from "./components/TopLoader";
 import RouteChangeHandler from "./components/RouteChangeHandler";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignupForm />} />
         </Routes>
+        <ToastContainer position='bottom-right' autoClose={4000} />
       </BrowserRouter>
     </LoaderProvider>
   );

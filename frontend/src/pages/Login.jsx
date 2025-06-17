@@ -1,37 +1,45 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import styled from "styled-components";
 import { auth, provider } from "../firebase/firebaseConfig";
 import { Form, Button, Alert } from "react-bootstrap";
 import AnimatedBackground from "../components/AnimatedBackground";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setErrorMsg("");
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       console.log(
         "Logged in as:",
         result.user.displayName || result.user.email
       );
+      toast.success("Login successful!");
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
-      setErrorMsg(error.message);
+      toast.error("Login failed: " + error.message);
     }
   };
 
   const handleGoogleLogin = async () => {
-    setErrorMsg("");
     try {
       const result = await signInWithPopup(auth, provider);
       console.log("Logged in with Google:", result.user.displayName);
+      toast.success("Login Successful!");
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
-      setErrorMsg(error.message);
+      toast.error("Login failed: " + error.message);
     }
   };
 
@@ -42,8 +50,6 @@ const Login = () => {
           <h3 style={{ textAlign: "center" }} className='mb-4'>
             Log In
           </h3>
-
-          {errorMsg && <Alert variant='danger'>{errorMsg}</Alert>}
 
           <Form.Group className='mb-3'>
             <Form.Label>Email :</Form.Label>

@@ -6,28 +6,27 @@ import { doc, setDoc, Timestamp, getDoc } from "firebase/firestore";
 import { Form, Button, Alert } from "react-bootstrap";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Avatar from "../assets/avatar.png";
+import { toast } from "react-toastify";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    setErrorMsg("");
-    setSuccessMsg("");
 
     if (password.length < 6) {
-      setErrorMsg("Password must be at least 6 characters.");
+      toast.error("Password must be at least 6 characters.");
+
       return;
     }
 
     if (password !== confirmPassword) {
-      setErrorMsg("Passwords do not match.");
+      toast.error("Passwords do not match.");
+
       return;
     }
 
@@ -53,15 +52,17 @@ const SignupForm = () => {
         console.log("User doc already exists, skipping Firestore write.");
       }
 
-      setSuccessMsg("Account created! You can now log in.");
+      toast.success("Account created! You can now log in.");
+
       setTimeout(() => {
         navigate("/login");
       }, 3000);
 
       setEmail("");
       setPassword("");
+      setConfirmPassword("");
     } catch (error) {
-      setErrorMsg(error.message);
+      toast.error(error.message);
     }
   };
 
@@ -76,9 +77,6 @@ const SignupForm = () => {
           <h3 className='mb-4' style={{ textAlign: "center" }}>
             Sign Up
           </h3>
-
-          {errorMsg && <Alert variant='danger'>{errorMsg}</Alert>}
-          {successMsg && <Alert variant='success'>{successMsg}</Alert>}
 
           <Form.Group className='mb-3'>
             <Form.Label>Email :</Form.Label>

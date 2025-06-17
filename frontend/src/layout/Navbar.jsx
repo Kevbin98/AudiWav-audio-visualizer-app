@@ -1,6 +1,6 @@
 // src/layout/Navbar.jsx
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoHomeSharp, IoLogIn } from "react-icons/io5";
@@ -14,12 +14,11 @@ const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  //const user = { username: "Guest", avatar: Avatar };
-
-  const { user, loading } = useContext(UserContext);
+  const { user, loading, logout } = useContext(UserContext);
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
   const handleNavClick = () => setDropdownOpen(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -46,25 +45,25 @@ const MyNavbar = () => {
             </Nav.Link>
           </div>
           {/* Right side  */}
-          {!loading && user ? (
-            <div
-              style={rightSide}
-              onClick={toggleDropdown}
-              className='hover-darken'
-            >
-              <span style={usernameStyle}>{user.username || "User"}</span>
-              <img
-                src={user.avatar || Avatar}
-                alt='user Avatar'
-                style={avatarStyle}
-              />
-            </div>
-          ) : (
+          {loading ? (
             <div style={rightSide}>
               <div className='skeleton-user-info'>
                 <div className='skeleton-line skeleton-name' />
               </div>
               <div className='skeleton-avatar' />
+            </div>
+          ) : (
+            <div
+              style={rightSide}
+              onClick={toggleDropdown}
+              className='hover-darken'
+            >
+              <span style={usernameStyle}>{user?.username || "Guest"}</span>
+              <img
+                src={user?.avatar || Avatar}
+                alt='user Avatar'
+                style={avatarStyle}
+              />
             </div>
           )}
         </Container>
@@ -102,7 +101,36 @@ const MyNavbar = () => {
         >
           Settings
         </Nav.Link>
-        <Nav.Link
+
+        {user ? (
+          <Nav.Link
+            as='button'
+            style={{
+              ...dropdownItem,
+              width: "100%",
+            }}
+            onClick={() => {
+              logout();
+              handleNavClick();
+              navigate("/");
+            }}
+            className='hover-darken'
+          >
+            Logout
+          </Nav.Link>
+        ) : (
+          <Nav.Link
+            as={NavLink}
+            to='/login'
+            style={dropdownItem}
+            onClick={handleNavClick}
+            className='hover-darken'
+          >
+            Login
+          </Nav.Link>
+        )}
+
+        {/* <Nav.Link
           as={NavLink}
           to='/login'
           style={dropdownItem}
@@ -110,7 +138,7 @@ const MyNavbar = () => {
           className='hover-darken'
         >
           Login
-        </Nav.Link>
+        </Nav.Link> */}
       </div>
     </>
   );
