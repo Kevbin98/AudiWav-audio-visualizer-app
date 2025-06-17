@@ -7,6 +7,7 @@ import { Form, Button, Alert } from "react-bootstrap";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Avatar from "../assets/avatar.png";
 import { toast } from "react-toastify";
+import CoverImage from "../assets/coverplaceholder.png";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ const SignupForm = () => {
           email: result.user.email,
           username: "",
           avatar: result.user.photoURL || Avatar,
+          coverImage: CoverImage,
           createdAt: Timestamp.now(),
         }).catch((err) => console.error("Firestore write error:", err));
       } else {
