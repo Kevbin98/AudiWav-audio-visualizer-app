@@ -1,5 +1,5 @@
 // src/layout/Navbar.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -7,13 +7,16 @@ import { IoHomeSharp, IoLogIn } from "react-icons/io5";
 import { MdExplore, MdOutlineContactSupport } from "react-icons/md";
 import { FaUserCircle, FaMusic } from "react-icons/fa";
 import Avatar from "../assets/avatar.png";
+import { UserContext } from "../context/UserContext";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // 🔐 Replace with Firebase user later
-  const user = { username: "Guest", avatar: Avatar };
+  //const user = { username: "Guest", avatar: Avatar };
+
+  const { user, loading } = useContext(UserContext);
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
   const handleNavClick = () => setDropdownOpen(false);
@@ -43,14 +46,27 @@ const MyNavbar = () => {
             </Nav.Link>
           </div>
           {/* Right side  */}
-          <div
-            style={rightSide}
-            onClick={toggleDropdown}
-            className='hover-darken'
-          >
-            <span style={usernameStyle}>{user.username}</span>
-            <img src={user.avatar} alt='user Avatar' style={avatarStyle} />
-          </div>
+          {!loading && user ? (
+            <div
+              style={rightSide}
+              onClick={toggleDropdown}
+              className='hover-darken'
+            >
+              <span style={usernameStyle}>{user.username || "User"}</span>
+              <img
+                src={user.avatar || Avatar}
+                alt='user Avatar'
+                style={avatarStyle}
+              />
+            </div>
+          ) : (
+            <div style={rightSide}>
+              <div className='skeleton-user-info'>
+                <div className='skeleton-line skeleton-name' />
+              </div>
+              <div className='skeleton-avatar' />
+            </div>
+          )}
         </Container>
       </Navbar>
 
