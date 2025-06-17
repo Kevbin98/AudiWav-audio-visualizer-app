@@ -7,19 +7,26 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import SignupForm from "./pages/Signup";
+import { LoaderProvider } from "./context/LoaderContext";
+import TopLoader from "./components/TopLoader";
+import RouteChangeHandler from "./components/RouteChangeHandler";
 
 function App() {
   return (
-    <BrowserRouter>
-      <MyNavbar />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/profile' element={<Profile />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<SignupForm />} />
-      </Routes>
-    </BrowserRouter>
+    <LoaderProvider>
+      <BrowserRouter>
+        <RouteChangeHandler />
+        <TopLoader />
+        <MyNavbar />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/profile' element={<Profile />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/signup' element={<SignupForm />} />
+        </Routes>
+      </BrowserRouter>
+    </LoaderProvider>
   );
 }
 
