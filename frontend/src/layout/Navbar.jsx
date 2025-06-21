@@ -9,6 +9,7 @@ import { FaUserCircle, FaMusic } from "react-icons/fa";
 import Avatar from "../assets/avatar.png";
 import { UserContext } from "../context/UserContext";
 import SkeletonLoader from "../components/SkeletonLoader";
+import Logo from "../assets/logo.svg";
 
 const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -41,7 +42,8 @@ const MyNavbar = () => {
           {/* left side */}
           <div>
             <Nav.Link as={NavLink} to='/' style={logoText}>
-              <h3 className='hover-darken'>Audio Visualiser App</h3>
+              {/* <h3 className='hover-darken'>Audio Visualiser App</h3> */}
+              <img style={logo} className='hover-darken' src={Logo} alt='' />
             </Nav.Link>
           </div>
           {/* Right side  */}
@@ -103,8 +105,8 @@ const MyNavbar = () => {
         </Nav.Link>
 
         {user ? (
-          <Nav.Link
-            as='button'
+          <Button
+            variant='link'
             style={{
               ...dropdownItem,
               width: "100%",
@@ -117,7 +119,7 @@ const MyNavbar = () => {
             className='hover-darken'
           >
             Logout
-          </Nav.Link>
+          </Button>
         ) : (
           <Nav.Link
             as={NavLink}
@@ -180,6 +182,10 @@ const usernameStyle = {
 const logoText = {
   color: "#fff",
   textDecoration: "none",
+};
+
+const logo = {
+  height: "60px",
 };
 
 const dropdown = {

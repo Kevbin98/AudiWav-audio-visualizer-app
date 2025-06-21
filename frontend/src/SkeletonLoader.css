@@ -5,7 +5,8 @@
 
 .skeleton-header,
 .skeleton-avatar,
-.skeleton-line {
+.skeleton-line,
+.skeleton-cover {
   background: linear-gradient(90deg, #1f1f1f 25%, #333 50%, #1f1f1f 75%);
   background-size: 200% 100%;
   animation: shimmer 1.2s infinite;
@@ -22,6 +23,11 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
+}
+
+.skeleton-cover {
+  height: 400px;
+  width: 100%;
 }
 
 .skeleton-line {
