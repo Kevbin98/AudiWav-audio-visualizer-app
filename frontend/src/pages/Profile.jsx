@@ -6,12 +6,15 @@ import styled, { keyframes } from "styled-components";
 import useMobile from "../hooks/Mobile";
 import { FaCog } from "react-icons/fa";
 import EditProfile from "../components/EditProfile";
+import AboutContent from "../Tabs/AboutContent";
+import ProjectsContent from "../Tabs/ProjectContent";
 
 const Profile = () => {
   const { user, loading } = useContext(UserContext);
   const isMobile = useMobile(450);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("about");
 
   return (
     <MainContainer>
@@ -44,16 +47,31 @@ const Profile = () => {
                 <CogIcon onClick={() => setIsOpen(true)} />
               </li>
               <li>
-                <h5 className='hover-darken'>About</h5>
+                <h5
+                  className='hover-darken'
+                  onClick={() => setActiveTab("about")}
+                >
+                  About
+                </h5>
               </li>
               <li>
-                <h5 className='hover-darken'>Projects</h5>
+                <h5
+                  className='hover-darken'
+                  onClick={() => setActiveTab("projects")}
+                >
+                  Projects
+                </h5>
               </li>
-              <li style={{ paddingBottom: "10px" }}>
+              <li>
                 <SearchBar />
               </li>
             </NavList>
           </NavWrapper>
+
+          <TabContainer>
+            {activeTab === "about" && <AboutContent />}
+            {activeTab === "projects" && <ProjectsContent />}
+          </TabContainer>
 
           {isOpen && (
             <PopupOverlay onClick={() => setIsOpen(false)}>
@@ -84,6 +102,7 @@ const CoverContainer = styled.div`
   background-color: #333;
   position: relative;
   border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
 
   @media (max-width: 450px) {
     height: 200px;
@@ -96,6 +115,7 @@ const CoverImage = styled.img`
   object-fit: cover;
   object-position: center;
   border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
 `;
 
 const ProfileDetails = styled.div`
@@ -107,7 +127,6 @@ const ProfileDetails = styled.div`
   margin-left: 10%;
   color: white;
   position: relative;
-  //z-index: 9999;
 `;
 
 const Avatar = styled.img.attrs(() => ({}))`
@@ -117,14 +136,16 @@ const Avatar = styled.img.attrs(() => ({}))`
   border: 3px solid white;
   object-fit: cover;
   background-color: #222;
-  //z-index: 9999;
 `;
 
 const NavWrapper = styled.div`
   border-bottom: 2px solid white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
   width: 97%;
   position: relative;
   margin: 20px auto;
+  padding: 10px;
+  border-radius: 5px;
 `;
 
 const NavList = styled.ul`
@@ -196,6 +217,12 @@ const CloseButton = styled.button`
   border: none;
   color: white;
   cursor: pointer;
+`;
+
+const TabContainer = styled.div`
+  width: 97%;
+  margin: 0 auto;
+  padding-top: 20px;
 `;
 
 export default Profile;
