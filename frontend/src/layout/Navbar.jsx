@@ -42,7 +42,6 @@ const MyNavbar = () => {
           {/* left side */}
           <div>
             <Nav.Link as={NavLink} to='/' style={logoText}>
-              {/* <h3 className='hover-darken'>Audio Visualiser App</h3> */}
               <img style={logo} className='hover-darken' src={Logo} alt='' />
             </Nav.Link>
           </div>
@@ -131,16 +130,6 @@ const MyNavbar = () => {
             Login
           </Nav.Link>
         )}
-
-        {/* <Nav.Link
-          as={NavLink}
-          to='/login'
-          style={dropdownItem}
-          onClick={handleNavClick}
-          className='hover-darken'
-        >
-          Login
-        </Nav.Link> */}
       </div>
     </>
   );

@@ -68,3 +68,22 @@ a:hover {
   transform: translateY(0);
   pointer-events: auto;
 }
+
+.custom-search {
+  width: 150px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.custom-search.expanded {
+  width: 250px;
+  background-color: #2a2a2a;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
