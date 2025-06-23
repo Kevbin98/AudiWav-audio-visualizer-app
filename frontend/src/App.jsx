@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import SignupForm from "./pages/Signup";
+import Create from "./pages/Create.jsx";
 import { LoaderProvider } from "./context/LoaderContext";
 import TopLoader from "./components/TopLoader";
 import RouteChangeHandler from "./components/RouteChangeHandler";
@@ -26,6 +27,7 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path='/login' element={<Login />} />
           <Route path='/signup' element={<SignupForm />} />
+          <Route path='/create' element={<Create />} />
         </Routes>
         <ToastContainer position='bottom-right' autoClose={4000} />
       </BrowserRouter>

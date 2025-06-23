@@ -8,6 +8,7 @@ import { FaCog } from "react-icons/fa";
 import EditProfile from "../components/EditProfile";
 import AboutContent from "../Tabs/AboutContent";
 import ProjectsContent from "../Tabs/ProjectContent";
+import Modal from "../components/Modal";
 
 const Profile = () => {
   const { user, loading } = useContext(UserContext);
@@ -73,13 +74,19 @@ const Profile = () => {
             {activeTab === "projects" && <ProjectsContent />}
           </TabContainer>
 
-          {isOpen && (
+          {/* {isOpen && (
             <PopupOverlay onClick={() => setIsOpen(false)}>
               <PopupContent onClick={(e) => e.stopPropagation()}>
                 <CloseButton onClick={() => setIsOpen(false)}>×</CloseButton>
                 <EditProfile />
               </PopupContent>
             </PopupOverlay>
+          )} */}
+
+          {isOpen && (
+            <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+              <EditProfile />
+            </Modal>
           )}
         </>
       )}
@@ -180,43 +187,6 @@ const CogIcon = styled(FaCog)`
   &:hover {
     animation: ${spin} 1s linear infinite;
   }
-`;
-
-const PopupOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 9998;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PopupContent = styled.div`
-  background: #1f1f1f;
-  padding: 30px;
-  border-radius: 10px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
-  overflow-y: auto;
-  position: relative;
-  z-index: 9999;
-  color: white;
-`;
-
-const CloseButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
 `;
 
 const TabContainer = styled.div`

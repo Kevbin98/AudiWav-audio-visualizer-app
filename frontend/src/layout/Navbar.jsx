@@ -2,10 +2,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { IoHomeSharp, IoLogIn } from "react-icons/io5";
-import { MdExplore, MdOutlineContactSupport } from "react-icons/md";
-import { FaUserCircle, FaMusic } from "react-icons/fa";
+import { FaPlusCircle } from "react-icons/fa";
 import Avatar from "../assets/avatar.png";
 import { UserContext } from "../context/UserContext";
 import SkeletonLoader from "../components/SkeletonLoader";
@@ -54,17 +51,23 @@ const MyNavbar = () => {
               <div className='skeleton-avatar' />
             </div>
           ) : (
-            <div
-              style={rightSide}
-              onClick={toggleDropdown}
-              className='hover-darken'
-            >
-              <span style={usernameStyle}>{user?.username || "Guest"}</span>
-              <img
-                src={user?.avatar || Avatar}
-                alt='user Avatar'
-                style={avatarStyle}
-              />
+            <div style={rightSide}>
+              <Button variant='outline-danger'>
+                <FaPlusCircle style={{ marginRight: "8px" }} />
+                New video
+              </Button>
+              <div
+                style={rightSide}
+                onClick={toggleDropdown}
+                className='hover-darken'
+              >
+                <span style={usernameStyle}>{user?.username || "Guest"}</span>
+                <img
+                  src={user?.avatar || Avatar}
+                  alt='user Avatar'
+                  style={avatarStyle}
+                />
+              </div>
             </div>
           )}
         </Container>
