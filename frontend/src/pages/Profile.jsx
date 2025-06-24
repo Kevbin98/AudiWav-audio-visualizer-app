@@ -9,6 +9,8 @@ import EditProfile from "../components/EditProfile";
 import AboutContent from "../Tabs/AboutContent";
 import ProjectsContent from "../Tabs/ProjectContent";
 import Modal from "../components/Modal";
+import Cover from "../assets/coverplaceholder.png";
+import AvatarPlaceholder from "../assets/avatar.png";
 
 const Profile = () => {
   const { user, loading } = useContext(UserContext);
@@ -32,13 +34,17 @@ const Profile = () => {
       ) : (
         <>
           <CoverContainer>
-            <CoverImage src={user.coverImage} alt='cover' />
+            <CoverImage src={user?.coverImage || Cover} alt='cover' />
           </CoverContainer>
 
           <ProfileDetails>
-            <Avatar src={user.avatar} alt='avatar' $isMobile={isMobile} />
+            <Avatar
+              src={user?.avatar || AvatarPlaceholder}
+              alt='avatar'
+              $isMobile={isMobile}
+            />
             <div>
-              <h3>{user.username}</h3>
+              <h3>{user?.username || "Guest"}</h3>
             </div>
           </ProfileDetails>
 
