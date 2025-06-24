@@ -7,9 +7,12 @@ import Avatar from "../assets/avatar.png";
 import { UserContext } from "../context/UserContext";
 import SkeletonLoader from "../components/SkeletonLoader";
 import Logo from "../assets/logo.svg";
+import Modal from "../components/Modal";
+import StartProjectModal from "../components/startProjectModal";
 
 const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const { user, loading, logout } = useContext(UserContext);
@@ -52,7 +55,7 @@ const MyNavbar = () => {
             </div>
           ) : (
             <div style={rightSide}>
-              <Button variant='outline-danger'>
+              <Button variant='outline-danger' onClick={() => setIsOpen(true)}>
                 <FaPlusCircle style={{ marginRight: "8px" }} />
                 New video
               </Button>
@@ -132,6 +135,13 @@ const MyNavbar = () => {
           >
             Login
           </Nav.Link>
+        )}
+      </div>
+      <div>
+        {isOpen && (
+          <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+            <StartProjectModal />
+          </Modal>
         )}
       </div>
     </>

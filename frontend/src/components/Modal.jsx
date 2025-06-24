@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { IoMdClose } from "react-icons/io";
 
 const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
@@ -7,7 +8,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   return (
     <Overlay onClick={onClose}>
       <Content onClick={(e) => e.stopPropagation()}>
-        <CloseButton onClick={onClose}>×</CloseButton>
+        <CloseButton onClick={onClose}>x</CloseButton>
         {children}
       </Content>
     </Overlay>
@@ -29,7 +30,7 @@ const Overlay = styled.div`
 
 const Content = styled.div`
   background: #1f1f1f;
-  padding: 30px;
+  padding: 30px 20px;
   border-radius: 10px;
   width: 90%;
   max-width: 500px;
@@ -38,6 +39,14 @@ const Content = styled.div`
   position: relative;
   z-index: 9999;
   color: white;
+
+  @media (max-width: 500px) {
+    width: 95%;
+    margin-top: 50px;
+    border-radius: 8px;
+    padding: 20px 16px;
+    max-height: 75vh;
+  }
 `;
 
 const CloseButton = styled.button`

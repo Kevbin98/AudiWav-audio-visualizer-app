@@ -74,15 +74,6 @@ const Profile = () => {
             {activeTab === "projects" && <ProjectsContent />}
           </TabContainer>
 
-          {/* {isOpen && (
-            <PopupOverlay onClick={() => setIsOpen(false)}>
-              <PopupContent onClick={(e) => e.stopPropagation()}>
-                <CloseButton onClick={() => setIsOpen(false)}>×</CloseButton>
-                <EditProfile />
-              </PopupContent>
-            </PopupOverlay>
-          )} */}
-
           {isOpen && (
             <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
               <EditProfile />
