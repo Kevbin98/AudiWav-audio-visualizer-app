@@ -1,7 +1,7 @@
 import React from "react";
 
 const Create = () => {
-  return <div></div>;
+  return <div style={{ color: "black" }}>create</div>;
 };
 
 export default Create;

@@ -6,15 +6,18 @@ import { FaPlusCircle } from "react-icons/fa";
 import Avatar from "../assets/avatar.png";
 import { UserContext } from "../context/UserContext";
 import SkeletonLoader from "../components/SkeletonLoader";
-import Logo from "../assets/logo.svg";
+import LogoDesktop from "../assets/logoDesktop.svg";
 import Modal from "../components/Modal";
 import StartProjectModal from "../components/startProjectModal";
+import LogoMobile from "../assets/logoMobile.svg";
+import isMobile from "../hooks/Mobile";
 
 const MyNavbar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const useMobile = isMobile(500);
   const { user, loading, logout } = useContext(UserContext);
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
@@ -42,7 +45,12 @@ const MyNavbar = () => {
           {/* left side */}
           <div>
             <Nav.Link as={NavLink} to='/' style={logoText}>
-              <img style={logo} className='hover-darken' src={Logo} alt='' />
+              <img
+                style={logo}
+                className='hover-darken'
+                src={useMobile ? LogoMobile : LogoDesktop}
+                alt=''
+              />
             </Nav.Link>
           </div>
           {/* Right side  */}
@@ -140,7 +148,7 @@ const MyNavbar = () => {
       <div>
         {isOpen && (
           <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
-            <StartProjectModal />
+            <StartProjectModal onClose={() => setIsOpen(false)} />
           </Modal>
         )}
       </div>

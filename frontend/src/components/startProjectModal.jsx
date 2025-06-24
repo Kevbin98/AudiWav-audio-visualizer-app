@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-const StartProjectModal = ({ onClose, onChooseTemplate, onCreateScratch }) => {
+const StartProjectModal = ({ onClose, onChooseTemplate }) => {
   const [activeTab, setActiveTab] = useState("template");
+  const navigate = useNavigate();
 
   return (
     <Wrapper>
@@ -30,14 +32,26 @@ const StartProjectModal = ({ onClose, onChooseTemplate, onCreateScratch }) => {
         {activeTab === "template" ? (
           <TemplateView>
             <p>Choose from a selection of ready-made templates to customize.</p>
-            <Button variant='outline-danger' onClick={onChooseTemplate}>
+            <Button
+              variant='outline-danger'
+              onClick={() => {
+                onChooseTemplate();
+                onClose();
+              }}
+            >
               Browse Templates
             </Button>
           </TemplateView>
         ) : (
           <ScratchView>
             <p>Start with a blank canvas and customize every detail.</p>
-            <Button variant='outline-danger' onClick={onCreateScratch}>
+            <Button
+              variant='outline-danger'
+              onClick={() => {
+                navigate("/create");
+                onClose();
+              }}
+            >
               Start from Scratch
             </Button>
           </ScratchView>
