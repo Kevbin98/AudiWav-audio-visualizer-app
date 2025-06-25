@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
-import Poison from "../assets/thePoison.mp4";
+
 import Cries from "../assets/cries.mp4";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import {
