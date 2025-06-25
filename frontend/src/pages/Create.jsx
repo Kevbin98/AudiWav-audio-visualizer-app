@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
-
-import Cries from "../assets/cries.mp4";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
 import {
   FaMusic,
@@ -43,7 +41,7 @@ const Create = () => {
 
       <VideoContainer>
         <StyledVideo controls>
-          <source src={Cries} type='video/mp4' />
+          <source type='video/mp4' />
           Your browser does not support the video tag.
         </StyledVideo>
       </VideoContainer>
