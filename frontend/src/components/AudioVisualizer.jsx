@@ -1,13 +1,27 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
-import { shapeRenderers } from "../utils/shapeRenderers"; // Make sure this file exists
-import testAudio from "../assets/test.mp3";
+import { shapeRenderers } from "../utils/shapeRenderers"; // make sure this exists
 
-const AudioVisualizer = () => {
+const AudioVisualizer = ({ mediaElement, shape = "bars" }) => {
   const canvasRef = useRef(null);
-  const [shape, setShape] = useState("bars");
 
   useEffect(() => {
+    if (!mediaElement) return;
+
+    // 👇 AudioContext setup
+    const audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
+    const source = audioContext.createMediaElementSource(mediaElement);
+    const analyser = audioContext.createAnalyser();
+    analyser.fftSize = 256;
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    // 👇 PIXI setup
     const app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -17,37 +31,15 @@ const AudioVisualizer = () => {
 
     canvasRef.current.appendChild(app.view);
 
-    const audioContext = new (window.AudioContext ||
-      window.webkitAudioContext)();
-    const audio = new Audio(testAudio);
-    audio.crossOrigin = "anonymous";
-    audio.loop = true;
-    audio.play().catch(() => {
-      console.log("Autoplay blocked. Waiting for user interaction...");
-      window.addEventListener(
-        "click",
-        () => {
-          audio.play();
-          console.log("User clicked, playing audio");
-        },
-        { once: true }
-      );
-    });
-
-    const source = audioContext.createMediaElementSource(audio);
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 256;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
+    // 👇 Create graphics elements for bars/lines/circles
     const shapes = [];
-
     for (let i = 0; i < bufferLength; i++) {
       const g = new PIXI.Graphics();
       app.stage.addChild(g);
       shapes.push(g);
     }
 
+    // 👇 Ticker update loop
     app.ticker.add(() => {
       analyser.getByteFrequencyData(dataArray);
 
@@ -58,23 +50,14 @@ const AudioVisualizer = () => {
       });
     });
 
+    // 👇 Cleanup
     return () => {
-      audio.pause();
-      audioContext.close();
       app.destroy(true, true);
+      audioContext.close();
     };
-  }, [shape]);
+  }, [mediaElement, shape]);
 
-  return (
-    <>
-      <div style={{ position: "absolute", top: 100, left: 10, zIndex: 10 }}>
-        <button onClick={() => setShape("bars")}>Bars</button>
-        <button onClick={() => setShape("circles")}>Circles</button>
-        <button onClick={() => setShape("lines")}>Lines</button>
-      </div>
-      <div ref={canvasRef} style={{ width: "100vw", height: "100vh" }} />
-    </>
-  );
+  return <div ref={canvasRef} style={{ width: "100vw", height: "100vh" }} />;
 };
 
 export default AudioVisualizer;

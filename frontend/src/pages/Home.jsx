@@ -2,7 +2,7 @@ import React from "react";
 import AudioVisualizer from "../components/AudioVisualizer";
 
 const Home = () => {
-  return <AudioVisualizer />;
+  return <div></div>;
 };
 
 export default Home;
