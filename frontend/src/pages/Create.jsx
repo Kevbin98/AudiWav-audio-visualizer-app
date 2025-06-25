@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
+import Poison from "../assets/thePoison.mp4";
+import Cries from "../assets/cries.mp4";
+import { MdOutlineSettingsInputComponent } from "react-icons/md";
+import {
+  FaMusic,
+  FaWaveSquare,
+  FaImage,
+  FaFont,
+  FaClosedCaptioning,
+  FaShapes,
+} from "react-icons/fa";
 
 const TABS = [
-  "General",
-  "Audio",
-  "Visualizer",
-  "Background",
-  "Text",
-  "Lyrics",
-  "Elements",
+  { name: "General", icon: <MdOutlineSettingsInputComponent /> },
+  { name: "Audio", icon: <FaMusic /> },
+  { name: "Visualizer", icon: <FaWaveSquare /> },
+  { name: "Background", icon: <FaImage /> },
+  { name: "Text", icon: <FaFont /> },
+  { name: "Lyrics", icon: <FaClosedCaptioning /> },
+  { name: "Elements", icon: <FaShapes /> },
 ];
 
 const Create = () => {
@@ -18,23 +29,21 @@ const Create = () => {
   return (
     <MainContainer>
       <TabsContainer>
-        {TABS.map((tab) => (
+        {TABS.map(({ name, icon }) => (
           <StyledTabButton
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            $active={activeTab === tab}
+            key={name}
+            onClick={() => setActiveTab(name)}
+            $active={activeTab === name}
           >
-            {tab}
+            <IconWrapper>{icon}</IconWrapper>
+            {name}
           </StyledTabButton>
         ))}
       </TabsContainer>
 
       <VideoContainer>
         <StyledVideo controls>
-          <source
-            src='https://www.w3schools.com/html/mov_bbb.mp4'
-            type='video/mp4'
-          />
+          <source src={Cries} type='video/mp4' />
           Your browser does not support the video tag.
         </StyledVideo>
       </VideoContainer>
@@ -64,32 +73,63 @@ const MainContainer = styled.div`
   }
 `;
 
+const IconWrapper = styled.span`
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const TabsContainer = styled.div`
-  width: 10%;
+  width: 12%;
   display: flex;
   padding: 10px;
   flex-direction: column;
   background-color: #1a1a1a;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   gap: 10px;
+  border-radius: 10px;
 
   @media (max-width: 900px) {
     flex-direction: row;
     width: 100%;
     overflow-x: auto;
-    justify-content: center;
+    justify-content: flex-start;
     padding-bottom: 10px;
+
+    padding-left: 10px;
+    scroll-padding-left: 10px;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #444;
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
   }
 `;
 
-const StyledTabButton = styled(Button)`
+const StyledTabButton = styled.button`
   background-color: ${({ $active }) => ($active ? "#dc3545" : "#333")};
   border: none;
-  text-align: left;
-  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 10px;
+  gap: 6px;
   color: white;
+  font-size: 13px;
   font-weight: ${({ $active }) => ($active ? "bold" : "normal")};
-  border-radius: 6px;
+  border-radius: 8px;
   transition: background-color 0.2s;
   width: 100%;
 
@@ -98,7 +138,10 @@ const StyledTabButton = styled(Button)`
   }
 
   @media (max-width: 900px) {
+    flex-direction: row;
+    flex-wrap: wrap; /* allow wrapping */
     width: auto;
+    flex: 1 1 100px;
     white-space: nowrap;
   }
 `;
