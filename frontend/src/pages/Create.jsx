@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { Button } from "react-bootstrap";
 import { MdOutlineSettingsInputComponent } from "react-icons/md";
@@ -10,6 +10,13 @@ import {
   FaClosedCaptioning,
   FaShapes,
 } from "react-icons/fa";
+import GeneralTab from "../Tabs/GeneralTab";
+import AudioTab from "../tabs/AudioTab";
+import VisualizerTab from "../tabs/VisualizerTab";
+import BackgroundTab from "../Tabs/BackgroundTab";
+import TextTab from "../Tabs/TextTab";
+import LyricsTab from "../Tabs/LyricsTab";
+import ElementsTab from "../Tabs/ElementsTab";
 
 const TABS = [
   { name: "General", icon: <MdOutlineSettingsInputComponent /> },
@@ -23,6 +30,15 @@ const TABS = [
 
 const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
+  const [ready, setReady] = useState(false);
+
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      setReady(true);
+    }
+  }, []);
 
   return (
     <MainContainer>
@@ -41,14 +57,19 @@ const Create = () => {
 
       <VideoContainer>
         <StyledVideo controls>
-          <source type='video/mp4' />
+          <source src='/test.mp4' type='video/mp4' />
           Your browser does not support the video tag.
         </StyledVideo>
       </VideoContainer>
 
       <TabContent>
-        <h3>{activeTab} Settings</h3>
-        <p>This is the {activeTab.toLowerCase()} configuration panel.</p>
+        {activeTab === "General" && <GeneralTab />}
+        {activeTab === "Audio" && <AudioTab />}
+        {activeTab === "Visualizer" && <VisualizerTab />}
+        {activeTab === "Background" && <BackgroundTab />}
+        {activeTab === "Text" && <TextTab />}
+        {activeTab === "Lyrics" && <LyricsTab />}
+        {activeTab === "Elements" && <ElementsTab />}
       </TabContent>
     </MainContainer>
   );
