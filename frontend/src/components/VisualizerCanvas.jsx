@@ -7,6 +7,7 @@ const VisualizerCanvas = ({ settings }) => {
   const canvasRef = useRef(null);
   const appRef = useRef(null);
   const [ready, setReady] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -34,8 +35,17 @@ const VisualizerCanvas = ({ settings }) => {
       appRef.current = app;
       setReady(true);
 
+      /*
       const handleResize = () => {
         app.renderer.resize(parent.clientWidth, parent.clientHeight);
+      };
+      */
+
+      const handleResize = () => {
+        const width = parent.clientWidth;
+        const height = parent.clientHeight;
+        app.renderer.resize(width, height);
+        setDimensions({ width, height }); // 👈 trigger redraw with new size
       };
 
       window.addEventListener("resize", handleResize);
@@ -65,14 +75,6 @@ const VisualizerCanvas = ({ settings }) => {
     const shapeType = settings.shape || "circle";
     const drawFn = shapeRegistry[shapeType];
 
-    /*
-    if (typeof drawFn === "function") {
-      drawFn(app, settings);
-    } else {
-      console.warn(`Unknown shape type: ${shapeType}`);
-    }
-      */
-
     if (typeof drawFn === "function") {
       // Pass in canvas dimensions
       drawFn(app, {
@@ -81,7 +83,7 @@ const VisualizerCanvas = ({ settings }) => {
         canvasHeight: app.renderer.height,
       });
     }
-  }, [settings, ready]);
+  }, [settings, ready, dimensions]);
 
   return <StyledCanvas ref={canvasRef} />;
 };
