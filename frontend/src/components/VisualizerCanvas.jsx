@@ -65,10 +65,21 @@ const VisualizerCanvas = ({ settings }) => {
     const shapeType = settings.shape || "circle";
     const drawFn = shapeRegistry[shapeType];
 
+    /*
     if (typeof drawFn === "function") {
       drawFn(app, settings);
     } else {
       console.warn(`Unknown shape type: ${shapeType}`);
+    }
+      */
+
+    if (typeof drawFn === "function") {
+      // Pass in canvas dimensions
+      drawFn(app, {
+        ...settings,
+        canvasWidth: app.renderer.width,
+        canvasHeight: app.renderer.height,
+      });
     }
   }, [settings, ready]);
 

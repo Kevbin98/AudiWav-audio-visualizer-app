@@ -33,11 +33,9 @@ const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
   const [ready, setReady] = useState(false);
   const [visualizerSettings, setVisualizerSettings] = useState({
-    shape: "circle",
+    shape: "dottedLine",
     color: 0xffffff,
     radius: 50,
-    x: 200,
-    y: 200,
   });
 
   const videoRef = useRef(null);
