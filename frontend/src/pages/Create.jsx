@@ -18,6 +18,7 @@ import TextTab from "../Tabs/TextTab";
 import LyricsTab from "../Tabs/LyricsTab";
 import ElementsTab from "../Tabs/ElementsTab";
 import VisualizerCanvas from "../components/VisualizerCanvas";
+import MusicPlayerDesktop from "../layout/MusicPlayer";
 
 const TABS = [
   { name: "General", icon: <MdOutlineSettingsInputComponent /> },
@@ -76,6 +77,7 @@ const Create = () => {
         {activeTab === "Lyrics" && <LyricsTab />}
         {activeTab === "Elements" && <ElementsTab />}
       </TabContent>
+      <MusicPlayerDesktop />
     </MainContainer>
   );
 };
