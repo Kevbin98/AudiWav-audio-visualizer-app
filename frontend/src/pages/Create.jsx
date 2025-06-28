@@ -17,6 +17,7 @@ import BackgroundTab from "../Tabs/BackgroundTab";
 import TextTab from "../Tabs/TextTab";
 import LyricsTab from "../Tabs/LyricsTab";
 import ElementsTab from "../Tabs/ElementsTab";
+import VisualizerCanvas from "../components/VisualizerCanvas";
 
 const TABS = [
   { name: "General", icon: <MdOutlineSettingsInputComponent /> },
@@ -31,6 +32,10 @@ const TABS = [
 const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
   const [ready, setReady] = useState(false);
+  const [visualizerSettings, setVisualizerSettings] = useState({
+    color: 0xffffff,
+    radius: 50,
+  });
 
   const videoRef = useRef(null);
 
@@ -55,11 +60,17 @@ const Create = () => {
         ))}
       </TabsContainer>
 
-      <VideoContainer>
+      {/* <VideoContainer>
         <StyledVideo controls>
           <source src='/test.mp4' type='video/mp4' />
           Your browser does not support the video tag.
         </StyledVideo>
+      </VideoContainer> */}
+
+      <VideoContainer>
+        <CanvasWrapper>
+          <VisualizerCanvas settings={visualizerSettings} />
+        </CanvasWrapper>
       </VideoContainer>
 
       <TabContent>
@@ -190,4 +201,21 @@ const TabContent = styled.div`
   @media (max-width: 900px) {
     width: 100%;
   }
+`;
+
+const CanvasWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  border-radius: 10px;
+  overflow: hidden;
+`;
+
+const StyledCanvas = styled.canvas`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
 `;
