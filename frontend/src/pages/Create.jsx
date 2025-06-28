@@ -33,8 +33,11 @@ const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
   const [ready, setReady] = useState(false);
   const [visualizerSettings, setVisualizerSettings] = useState({
+    shape: "circle",
     color: 0xffffff,
     radius: 50,
+    x: 200,
+    y: 200,
   });
 
   const videoRef = useRef(null);
@@ -59,13 +62,6 @@ const Create = () => {
           </StyledTabButton>
         ))}
       </TabsContainer>
-
-      {/* <VideoContainer>
-        <StyledVideo controls>
-          <source src='/test.mp4' type='video/mp4' />
-          Your browser does not support the video tag.
-        </StyledVideo>
-      </VideoContainer> */}
 
       <VideoContainer>
         <CanvasWrapper>

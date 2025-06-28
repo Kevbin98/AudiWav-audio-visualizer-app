@@ -1,83 +1,76 @@
-// components/VisualizerCanvas.jsx
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import * as PIXI from "pixi.js";
 import styled from "styled-components";
+import shapeRegistry from "../Utils/shapes.js";
 
 const VisualizerCanvas = ({ settings }) => {
   const canvasRef = useRef(null);
   const appRef = useRef(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // Wait for layout to complete
-    const raf = requestAnimationFrame(() => {
+    const waitUntilReady = () => {
       const parent = canvas.parentElement;
+      const width = parent?.clientWidth;
+      const height = parent?.clientHeight;
 
-      const width = parent?.clientWidth || 800;
-      const height = parent?.clientHeight || 600;
+      if (!width || !height) {
+        // Retry until parent has size
+        requestAnimationFrame(waitUntilReady);
+        return;
+      }
 
       const app = new PIXI.Application({
         view: canvas,
         width,
         height,
-        backgroundColor: 0x000000,
+        backgroundColor: 0x111111,
         antialias: true,
       });
 
       appRef.current = app;
+      setReady(true);
 
-      // Optional: handle window resize
       const handleResize = () => {
-        if (parent && app) {
-          app.renderer.resize(parent.clientWidth, parent.clientHeight);
-        }
+        app.renderer.resize(parent.clientWidth, parent.clientHeight);
       };
 
       window.addEventListener("resize", handleResize);
+      handleResize();
 
-      // Clean up
+      // Cleanup
       return () => {
         window.removeEventListener("resize", handleResize);
-      };
-    });
-
-    return () => {
-      cancelAnimationFrame(raf);
-      if (appRef.current) {
-        appRef.current.destroy(true, {
+        app.destroy(true, {
           children: true,
           texture: true,
           baseTexture: true,
         });
-      }
+        setReady(false);
+      };
     };
+
+    waitUntilReady();
   }, []);
 
   useEffect(() => {
     const app = appRef.current;
-    if (!app) return;
+    if (!app || !ready) return;
 
-    // Clear stage
     app.stage.removeChildren();
 
-    // Defensive defaults
-    const color =
-      typeof settings.color === "number" ? settings.color : 0xffffff;
-    const radius =
-      typeof settings.radius === "number" && settings.radius > 0
-        ? settings.radius
-        : 50;
+    const shapeType = settings.shape || "circle";
+    const drawFn = shapeRegistry[shapeType];
 
-    // Draw example shape
-    const shape = new PIXI.Graphics();
-    shape.beginFill(color);
-    shape.drawCircle(200, 200, radius);
-    shape.endFill();
-
-    app.stage.addChild(shape);
-  }, [settings]);
+    if (typeof drawFn === "function") {
+      drawFn(app, settings);
+    } else {
+      console.warn(`Unknown shape type: ${shapeType}`);
+    }
+  }, [settings, ready]);
 
   return <StyledCanvas ref={canvasRef} />;
 };
