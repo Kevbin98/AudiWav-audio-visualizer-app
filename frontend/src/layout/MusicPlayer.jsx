@@ -1,36 +1,57 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import { FaPlay, FaPause, FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { IoPlayBack, IoPlayForward } from "react-icons/io5";
 import useToggle from "../hooks/useToggle";
+import poison from "../assets/poison.mp3";
 
 const MusicPlayerDesktop = () => {
-  const playerReady = useRef(false);
+  const audioRef = useRef(null);
   const [collapsed, { toggle }] = useToggle(false);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  // Poll current time and duration
   useEffect(() => {
-    const interval = setInterval(() => {
-      const player = playerRef.current;
-      if (player && player.getCurrentTime) {
-        setCurrentTime(player.getCurrentTime());
-        setDuration(player.getDuration());
-      }
-    }, 500);
-    return () => clearInterval(interval);
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => {
+      setCurrentTime(audio.currentTime);
+      setDuration(audio.duration || 0);
+    };
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateTime);
+
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", updateTime);
+    };
   }, []);
 
   const togglePlay = () => {
-    if (!playerRef.current) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
     if (isPlaying) {
-      playerRef.current.pauseVideo();
+      audio.pause();
     } else {
-      playerRef.current.playVideo();
+      audio.play();
     }
-    setIsPlaying((prev) => !prev);
+    setIsPlaying(!isPlaying);
+  };
+
+  const handleSeek = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = parseFloat(e.target.value);
+    setCurrentTime(audio.currentTime);
+  };
+
+  const handleVolumeChange = (e) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = parseFloat(e.target.value);
   };
 
   const formatTime = (t) => {
@@ -54,15 +75,11 @@ const MusicPlayerDesktop = () => {
           transform: collapsed ? "translateY(100%)" : "translateY(0)",
         }}
       >
-        {/* LEFT */}
-
         {/* CENTER */}
         <div style={styles.center}>
           <div style={styles.buttonRow}>
             <Button
-              style={{
-                border: "none",
-              }}
+              style={{ border: "none" }}
               variant='outline-light'
               className='mx-2'
               onClick={togglePlay}
@@ -79,6 +96,7 @@ const MusicPlayerDesktop = () => {
               max={duration}
               step={0.1}
               value={currentTime}
+              onChange={handleSeek}
               style={styles.progressBar}
             />
             <span style={styles.time}>{formatTime(duration)}</span>
@@ -92,17 +110,14 @@ const MusicPlayerDesktop = () => {
             min='0'
             max='1'
             step='0.01'
-            onChange={(e) =>
-              playerRef.current?.setVolume(parseFloat(e.target.value) * 100)
-            }
+            onChange={handleVolumeChange}
             style={styles.volumeBar}
           />
         </div>
       </div>
 
-      <div style={styles.videoWrapper}>
-        <div id='yt-player' />
-      </div>
+      {/* Hidden audio element */}
+      <audio ref={audioRef} src={poison} preload='metadata' />
     </>
   );
 };
@@ -111,6 +126,7 @@ const BAR_HEIGHT = 100;
 const TOGGLE_SIZE = 32;
 
 const styles = {
+  // same styles as before...
   mainContainer: {
     backgroundColor: "rgba(22, 22, 23)",
     boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.9)",
@@ -128,49 +144,6 @@ const styles = {
     boxSizing: "border-box",
     transition: "transform 0.3s ease",
   },
-
-  left: {
-    display: "flex",
-    alignItems: "center",
-    gap: "15px",
-    minWidth: "200px",
-    color: "white",
-  },
-
-  img: {
-    height: "60px",
-    width: "60px",
-    objectFit: "cover",
-    borderRadius: "6px",
-  },
-
-  description: {
-    display: "flex",
-    flexDirection: "column",
-    overflow: "hidden",
-    maxWidth: "250px",
-  },
-
-  title: {
-    color: "white",
-    margin: 0,
-    fontSize: "0.9rem",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "100%",
-  },
-
-  artist: {
-    color: "#aaa",
-    margin: 0,
-    fontSize: "0.75rem",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    maxWidth: "100%",
-  },
-
   center: {
     position: "absolute",
     left: "50%",
@@ -184,13 +157,11 @@ const styles = {
     width: "100%",
     maxWidth: "500px",
   },
-
   buttonRow: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-
   progressWrapper: {
     display: "flex",
     alignItems: "center",
@@ -198,27 +169,23 @@ const styles = {
     width: "100%",
     maxWidth: "500px",
   },
-
   progressBar: {
     flex: 1,
     height: "4px",
-    accentColor: "#00bfff",
+    accentColor: "#dc3545",
   },
-
   volumeBar: {
     width: "100px",
     marginRight: "20px",
     height: "4px",
-    accentColor: "#00bfff",
+    accentColor: "#dc3545",
   },
-
   time: {
     color: "#ccc",
     fontSize: "0.75rem",
     minWidth: "40px",
     textAlign: "center",
   },
-
   right: {
     width: "150px",
     display: "flex",
@@ -226,25 +193,11 @@ const styles = {
     alignItems: "center",
     gap: "20px",
   },
-
   toggleButton: {
     position: "fixed",
     right: 20,
     bottom: BAR_HEIGHT / 2 - TOGGLE_SIZE / 2,
     zIndex: 9999,
-  },
-  videoWrapper: {
-    position: "fixed",
-    bottom: BAR_HEIGHT + 10,
-    left: 20,
-    width: "300px",
-    height: "170px",
-    backgroundColor: "#000",
-    borderRadius: "10px",
-    overflow: "hidden",
-    opacity: "0",
-    zIndex: -1,
-    transition: "transform 0.3s ease",
   },
 };
 

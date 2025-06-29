@@ -15,13 +15,13 @@ const StartProjectModal = ({ onClose, onChooseTemplate }) => {
 
       <TabHeader>
         <Tab
-          active={activeTab === "template"}
+          $active={activeTab === "template"}
           onClick={() => setActiveTab("template")}
         >
           Use a Template
         </Tab>
         <Tab
-          active={activeTab === "scratch"}
+          $active={activeTab === "scratch"}
           onClick={() => setActiveTab("scratch")}
         >
           Create from Scratch
@@ -91,8 +91,8 @@ const Tab = styled.div`
   padding: 10px;
   text-align: center;
   cursor: pointer;
-  border-bottom: ${({ active }) => (active ? "3px solid red" : "none")};
-  font-weight: ${({ active }) => (active ? "bold" : "normal")};
+  border-bottom: ${({ $active }) => ($active ? "3px solid red" : "none")};
+  font-weight: ${({ $active }) => ($active ? "bold" : "normal")};
 `;
 
 const ContentArea = styled.div`

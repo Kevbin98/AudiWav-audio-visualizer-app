@@ -190,6 +190,7 @@ const StyledVideo = styled.video`
 const TabContent = styled.div`
   width: 25%;
   padding: 20px;
+  height: auto;
   background-color: #1a1a1a;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
