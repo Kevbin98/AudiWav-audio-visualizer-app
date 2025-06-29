@@ -18,7 +18,7 @@ const VisualizerTab = () => {
         {tabs.map((tab) => (
           <Tab
             key={tab}
-            active={activeTab === tab}
+            $active={activeTab === tab}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
@@ -95,13 +95,13 @@ const TabNav = styled.div`
 `;
 
 const Tab = styled.button`
-  background-color: ${({ active }) => (active ? "#dc3545" : "#222")};
+  background-color: ${({ $active }) => ($active ? "#dc3545" : "#222")};
   color: white;
   padding: 8px 12px;
   border-radius: 6px;
   border: none;
   font-size: 14px;
-  font-weight: ${({ active }) => (active ? "bold" : "normal")};
+  font-weight: ${({ $active }) => ($active ? "bold" : "normal")};
   cursor: pointer;
   transition: background 0.2s;
 

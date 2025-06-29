@@ -3,13 +3,20 @@ import { Button } from "react-bootstrap";
 import { FaPlay, FaPause, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import useToggle from "../hooks/useToggle";
 import poison from "../assets/poison.mp3";
+import useMobile from "../hooks/Mobile";
 
 const MusicPlayerDesktop = () => {
   const audioRef = useRef(null);
+  const Mobile = useMobile(800);
   const [collapsed, { toggle }] = useToggle(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+
+  const RightMobile = {
+    ...styles.right,
+    display: Mobile ? "none" : "",
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -63,10 +70,16 @@ const MusicPlayerDesktop = () => {
 
   return (
     <>
-      <div style={styles.toggleButton}>
+      {/* <div style={styles.toggleButton}>
         <Button variant='dark' onClick={toggle}>
           {collapsed ? <FaChevronUp /> : <FaChevronDown />}
         </Button>
+      </div> */}
+
+      <div style={styles.toggleButton}>
+        <div className='hover-darken' onClick={toggle}>
+          {collapsed ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
       </div>
 
       <div
@@ -104,7 +117,7 @@ const MusicPlayerDesktop = () => {
         </div>
 
         {/* RIGHT */}
-        <div style={styles.right}>
+        <div style={RightMobile}>
           <input
             type='range'
             min='0'
@@ -126,7 +139,6 @@ const BAR_HEIGHT = 100;
 const TOGGLE_SIZE = 32;
 
 const styles = {
-  // same styles as before...
   mainContainer: {
     backgroundColor: "rgba(22, 22, 23)",
     boxShadow: "0 -2px 10px rgba(0, 0, 0, 0.9)",
@@ -152,7 +164,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    paddingLeft: "12px",
+    //paddingLeft: "12px",
     gap: "4px",
     width: "100%",
     maxWidth: "500px",
@@ -195,8 +207,8 @@ const styles = {
   },
   toggleButton: {
     position: "fixed",
-    right: 20,
-    bottom: BAR_HEIGHT / 2 - TOGGLE_SIZE / 2,
+    right: 10,
+    bottom: BAR_HEIGHT / 1.2 - TOGGLE_SIZE / 1.2,
     zIndex: 9999,
   },
 };
