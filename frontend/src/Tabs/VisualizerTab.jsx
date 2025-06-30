@@ -11,7 +11,9 @@ const VisualizerTab = () => {
     <Container>
       <Header>
         <Title>Visualizer</Title>
-        <SelectMediaButton>Select Media</SelectMediaButton>
+        {/* <SelectMediaButton>Select Media</SelectMediaButton>
+         */}
+        <button className='dark-button'>Select Media</button>
       </Header>
 
       <TabNav>

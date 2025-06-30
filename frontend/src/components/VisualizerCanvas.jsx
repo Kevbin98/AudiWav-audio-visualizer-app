@@ -52,7 +52,7 @@ const VisualizerCanvas = ({ settings }) => {
           .catch((err) => console.warn("Could not resume audio context:", err));
 
         const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64;
+        analyser.fftSize = 1024;
 
         try {
           const source = audioCtx.createMediaElementSource(audio);
@@ -113,7 +113,7 @@ const VisualizerCanvas = ({ settings }) => {
       ...settings,
       canvasWidth: app.renderer.width,
       canvasHeight: app.renderer.height,
-      analyser: analyserRef.current || null, // <- fallback to null
+      analyser: analyserRef.current || null,
     });
   }, [settings.shape, dimensions, ready]);
 

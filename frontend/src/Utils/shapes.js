@@ -10,25 +10,34 @@ const shapeRegistry = {
     const baseRadius = settings.radius || 50;
     const color = settings.color || 0xffffff;
 
-    // Fallback mode if no analyser
-
     const analyser = settings.analyser;
     const bufferLength = analyser?.frequencyBinCount || 0;
-    const dataArray = bufferLength > 0 ? new Uint8Array(bufferLength) : null;
+    const dataArray = analyser ? new Uint8Array(bufferLength) : null;
+
+    let currentRadius = baseRadius;
+
+    const lerp = (a, b, t) => a + (b - a) * t;
 
     app.ticker.add(() => {
-      let radius = baseRadius;
+      let targetRadius = baseRadius;
 
       if (analyser && dataArray) {
         analyser.getByteFrequencyData(dataArray);
-        const bass = dataArray[1];
-        const scale = bass / 255;
-        radius += scale * 100;
+
+        const bassBins = Math.min(32, bufferLength);
+        const bassAvg =
+          dataArray.slice(0, bassBins).reduce((sum, val) => sum + val, 0) /
+          bassBins;
+
+        const scale = Math.pow(bassAvg / 255, 1.5); // nonlinear boost
+        targetRadius += scale * 120; // more aggressive
       }
+
+      currentRadius = lerp(currentRadius, targetRadius, 0.25);
 
       shape.clear();
       shape.beginFill(color);
-      shape.drawCircle(centerX, centerY, radius);
+      shape.drawCircle(centerX, centerY, currentRadius);
       shape.endFill();
     });
   },

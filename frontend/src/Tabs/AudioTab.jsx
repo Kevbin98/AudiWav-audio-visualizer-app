@@ -1,8 +1,26 @@
-import React from "react";
-import { Button } from "react-bootstrap";
+import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
-const AudioTab = () => {
+const AudioTab = ({ onAudioSelected }) => {
+  const fileInputRef = useRef();
+  const [fileName, setFileName] = useState("");
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (
+      file &&
+      (file.type.includes("audio/mp3") || file.type.includes("audio/wav"))
+    ) {
+      const url = URL.createObjectURL(file);
+      setFileName(file.name);
+      onAudioSelected(url); // Call parent callback
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <AudioContainer>
       <Card>
@@ -10,8 +28,19 @@ const AudioTab = () => {
         <Description>
           Upload an MP3 or WAV file to start visualizing your track.
         </Description>
-        <UploadButton variant='outline-light'>Upload Audio</UploadButton>
-        <FileInfo>(No file selected)</FileInfo>
+        <button className='dark-button' onClick={triggerFileInput}>
+          Upload Audio
+        </button>
+        <input
+          type='file'
+          accept='.mp3, .wav'
+          style={{ display: "none" }}
+          ref={fileInputRef}
+          onChange={handleFileChange}
+        />
+        <FileInfo>
+          {fileName ? `Selected: ${fileName}` : "(No file selected)"}
+        </FileInfo>
       </Card>
     </AudioContainer>
   );
@@ -50,17 +79,6 @@ const Description = styled.p`
   color: #ccc;
   font-size: 0.95rem;
   margin-bottom: 25px;
-`;
-
-const UploadButton = styled(Button)`
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  transition: 0.2s ease;
-  &:hover {
-    background-color: #dc3545;
-    color: white;
-  }
 `;
 
 const FileInfo = styled.p`
