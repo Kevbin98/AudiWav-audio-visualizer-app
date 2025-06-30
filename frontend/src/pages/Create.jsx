@@ -34,10 +34,12 @@ const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
   const [ready, setReady] = useState(false);
   const [visualizerSettings, setVisualizerSettings] = useState({
-    shape: "circle",
-    color: 0xffffff,
+    //shape: "circle",
+    //color: 0xffffff,
     //radius: 50,
   });
+
+  const audioRef = useRef(null);
 
   const videoRef = useRef(null);
 
@@ -64,7 +66,14 @@ const Create = () => {
 
       <VideoContainer>
         <CanvasWrapper>
-          <VisualizerCanvas settings={visualizerSettings} />
+          <VisualizerCanvas
+            settings={{
+              shape: "circle",
+              color: 0xffffff,
+              radius: 50,
+              audioRef: audioRef,
+            }}
+          />
         </CanvasWrapper>
       </VideoContainer>
 
@@ -77,7 +86,7 @@ const Create = () => {
         {activeTab === "Lyrics" && <LyricsTab />}
         {activeTab === "Elements" && <ElementsTab />}
       </TabContent>
-      <MusicPlayerDesktop />
+      <MusicPlayerDesktop audioRef={audioRef} />
     </MainContainer>
   );
 };

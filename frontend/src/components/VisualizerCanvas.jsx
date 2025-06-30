@@ -6,23 +6,28 @@ import shapeRegistry from "../Utils/shapes.js";
 const VisualizerCanvas = ({ settings }) => {
   const canvasRef = useRef(null);
   const appRef = useRef(null);
+  const audioCtxRef = useRef(null); // ✅ persist the context
   const [ready, setReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [drawTrigger, setDrawTrigger] = useState(0);
+
+  const analyserRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const audio = settings.audioRef?.current;
+    if (!canvas || !audio) return;
 
     const waitUntilReady = () => {
       const parent = canvas.parentElement;
-      const width = parent?.clientWidth;
-      const height = parent?.clientHeight;
-
-      if (!width || !height) {
-        // Retry until parent has size
+      if (!parent || parent.clientWidth === 0 || parent.clientHeight === 0) {
         requestAnimationFrame(waitUntilReady);
         return;
       }
+
+      const width = parent.clientWidth;
+      const height = parent.clientHeight;
+      setDimensions({ width, height });
 
       const app = new PIXI.Application({
         view: canvas,
@@ -35,55 +40,82 @@ const VisualizerCanvas = ({ settings }) => {
       appRef.current = app;
       setReady(true);
 
-      /*
-      const handleResize = () => {
-        app.renderer.resize(parent.clientWidth, parent.clientHeight);
+      const initializeAudio = () => {
+        if (!audioCtxRef.current) {
+          audioCtxRef.current = new AudioContext();
+        }
+
+        const audioCtx = audioCtxRef.current;
+        audioCtx
+          .resume()
+          .catch((err) => console.warn("Could not resume audio context:", err));
+
+        const analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64;
+
+        try {
+          const source = audioCtx.createMediaElementSource(audio);
+          source.connect(analyser);
+          analyser.connect(audioCtx.destination);
+          analyserRef.current = analyser;
+          setDrawTrigger((prev) => prev + 1);
+        } catch (err) {
+          console.warn("Audio source already connected. Skipping connection.");
+        }
+
+        window.removeEventListener("click", initializeAudio);
       };
-      */
+
+      // 🖱 Wait for user click before initializing AudioContext
+      window.addEventListener("click", initializeAudio, { once: true });
 
       const handleResize = () => {
-        const width = parent.clientWidth;
-        const height = parent.clientHeight;
-        app.renderer.resize(width, height);
-        setDimensions({ width, height }); // 👈 trigger redraw with new size
+        const newWidth = parent.clientWidth;
+        const newHeight = parent.clientHeight;
+        app.renderer.resize(newWidth, newHeight);
+        setDimensions({ width: newWidth, height: newHeight });
       };
 
       window.addEventListener("resize", handleResize);
       handleResize();
 
-      // Cleanup
       return () => {
         window.removeEventListener("resize", handleResize);
+        window.removeEventListener("click", initializeAudio);
         app.destroy(true, {
           children: true,
           texture: true,
           baseTexture: true,
         });
+        if (audioCtxRef.current) {
+          audioCtxRef.current.close();
+          audioCtxRef.current = null;
+        }
         setReady(false);
       };
     };
 
     waitUntilReady();
-  }, []);
+  }, [settings.audioRef]);
 
   useEffect(() => {
     const app = appRef.current;
-    if (!app || !ready) return;
+    const analyser = analyserRef.current;
+    if (!app || !ready || !analyser) return;
 
     app.stage.removeChildren();
 
     const shapeType = settings.shape || "circle";
     const drawFn = shapeRegistry[shapeType];
+    if (typeof drawFn !== "function") return;
 
-    if (typeof drawFn === "function") {
-      // Pass in canvas dimensions
-      drawFn(app, {
-        ...settings,
-        canvasWidth: app.renderer.width,
-        canvasHeight: app.renderer.height,
-      });
-    }
-  }, [settings, ready, dimensions]);
+    drawFn(app, {
+      ...settings,
+      canvasWidth: app.renderer.width,
+      canvasHeight: app.renderer.height,
+      analyser,
+    });
+  }, [drawTrigger, settings.shape, dimensions, ready]);
 
   return <StyledCanvas ref={canvasRef} />;
 };

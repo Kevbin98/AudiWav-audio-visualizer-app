@@ -5,8 +5,8 @@ import useToggle from "../hooks/useToggle";
 import poison from "../assets/poison.mp3";
 import useMobile from "../hooks/Mobile";
 
-const MusicPlayerDesktop = () => {
-  const audioRef = useRef(null);
+const MusicPlayerDesktop = ({ audioRef }) => {
+  //const audioRef = useRef(null);
   const Mobile = useMobile(800);
   const [collapsed, { toggle }] = useToggle(false);
   const [isPlaying, setIsPlaying] = useState(false);
