@@ -10,6 +10,7 @@ const VisualizerCanvas = ({ settings }) => {
   const [ready, setReady] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [drawTrigger, setDrawTrigger] = useState(0);
+  const [analyserReady, setAnalyserReady] = useState(false);
 
   const analyserRef = useRef(null);
 
@@ -58,7 +59,7 @@ const VisualizerCanvas = ({ settings }) => {
           source.connect(analyser);
           analyser.connect(audioCtx.destination);
           analyserRef.current = analyser;
-          setDrawTrigger((prev) => prev + 1);
+          setAnalyserReady(true);
         } catch (err) {
           console.warn("Audio source already connected. Skipping connection.");
         }
@@ -100,8 +101,7 @@ const VisualizerCanvas = ({ settings }) => {
 
   useEffect(() => {
     const app = appRef.current;
-    const analyser = analyserRef.current;
-    if (!app || !ready || !analyser) return;
+    if (!app || !ready) return;
 
     app.stage.removeChildren();
 
@@ -113,9 +113,29 @@ const VisualizerCanvas = ({ settings }) => {
       ...settings,
       canvasWidth: app.renderer.width,
       canvasHeight: app.renderer.height,
-      analyser,
+      analyser: analyserRef.current || null, // <- fallback to null
     });
-  }, [drawTrigger, settings.shape, dimensions, ready]);
+  }, [settings.shape, dimensions, ready]);
+
+  useEffect(() => {
+    if (!ready || !analyserReady) return;
+
+    const app = appRef.current;
+    if (!app) return;
+
+    app.stage.removeChildren();
+
+    const shapeType = settings.shape || "circle";
+    const drawFn = shapeRegistry[shapeType];
+    if (typeof drawFn !== "function") return;
+
+    drawFn(app, {
+      ...settings,
+      canvasWidth: app.renderer.width,
+      canvasHeight: app.renderer.height,
+      analyser: analyserRef.current,
+    });
+  }, [analyserReady, ready, settings.shape, dimensions]);
 
   return <StyledCanvas ref={canvasRef} />;
 };
