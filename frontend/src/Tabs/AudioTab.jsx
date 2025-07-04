@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 import UploadButton from "../components/UploadButton";
 
-const AudioTab = ({ onAudioSelected }) => {
+const AudioTab = ({ onAudioSelected, fileInfo }) => {
   const fileInputRef = useRef();
 
   return (
@@ -12,7 +12,7 @@ const AudioTab = ({ onAudioSelected }) => {
         <Description>
           Upload an MP3 or WAV file to start visualizing your track.
         </Description>
-        <UploadButton onAudioSelected={onAudioSelected} />
+        <UploadButton onAudioSelected={onAudioSelected} fileInfo={fileInfo} />
       </Card>
     </AudioContainer>
   );

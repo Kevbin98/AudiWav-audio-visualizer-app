@@ -1,18 +1,11 @@
 import { useState } from "react";
 
-const UploadButton = ({ onAudioSelected }) => {
-  const [fileInfo, setFileInfo] = useState(null);
-
+const UploadButton = ({ onAudioSelected, fileInfo }) => {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
       onAudioSelected(selectedFile, objectUrl);
-      setFileInfo({
-        name: selectedFile.name,
-        size: selectedFile.size,
-        type: selectedFile.type,
-      });
     }
   };
 

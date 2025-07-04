@@ -35,15 +35,20 @@ const Create = () => {
   const [ready, setReady] = useState(false);
   const [audioFile, setAudioFile] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
+  const [fileInfo, setFileInfo] = useState(null);
 
   const audioRef = useRef(null);
 
   const videoRef = useRef(null);
 
-  const handleAudioSelected = (file) => {
-    const url = URL.createObjectURL(file);
+  const handleAudioSelected = (file, url) => {
     setAudioFile(file);
     setAudioUrl(url);
+    setFileInfo({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+    });
   };
 
   useEffect(() => {
@@ -83,7 +88,7 @@ const Create = () => {
       <TabContent>
         {activeTab === "General" && <GeneralTab />}
         {activeTab === "Audio" && (
-          <AudioTab onAudioSelected={handleAudioSelected} />
+          <AudioTab onAudioSelected={handleAudioSelected} fileInfo={fileInfo} />
         )}
         {activeTab === "Visualizer" && <VisualizerTab />}
         {activeTab === "Background" && <BackgroundTab />}
