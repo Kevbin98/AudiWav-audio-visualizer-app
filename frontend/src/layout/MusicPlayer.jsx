@@ -5,7 +5,7 @@ import useToggle from "../hooks/useToggle";
 import poison from "../assets/poison.mp3";
 import useMobile from "../hooks/Mobile";
 
-const MusicPlayerDesktop = ({ audioRef }) => {
+const MusicPlayerDesktop = ({ audioRef, audioUrl }) => {
   //const audioRef = useRef(null);
   const Mobile = useMobile(800);
   const [collapsed, { toggle }] = useToggle(false);
@@ -17,6 +17,15 @@ const MusicPlayerDesktop = ({ audioRef }) => {
     ...styles.right,
     display: Mobile ? "none" : "",
   };
+
+  useEffect(() => {
+    if (audioRef.current && audioUrl) {
+      audioRef.current.src = audioUrl;
+      audioRef.current.load();
+      setIsPlaying(false); // reset play state when new file loads
+      setCurrentTime(0);
+    }
+  }, [audioUrl]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -70,12 +79,6 @@ const MusicPlayerDesktop = ({ audioRef }) => {
 
   return (
     <>
-      {/* <div style={styles.toggleButton}>
-        <Button variant='dark' onClick={toggle}>
-          {collapsed ? <FaChevronUp /> : <FaChevronDown />}
-        </Button>
-      </div> */}
-
       <div style={styles.toggleButton}>
         <div className='hover-darken' onClick={toggle}>
           {collapsed ? <FaChevronUp /> : <FaChevronDown />}
@@ -130,7 +133,7 @@ const MusicPlayerDesktop = ({ audioRef }) => {
       </div>
 
       {/* Hidden audio element */}
-      <audio ref={audioRef} src={poison} preload='metadata' />
+      <audio ref={audioRef} preload='metadata' />
     </>
   );
 };

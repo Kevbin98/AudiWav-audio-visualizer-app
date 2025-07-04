@@ -33,15 +33,18 @@ const TABS = [
 const Create = () => {
   const [activeTab, setActiveTab] = useState("General");
   const [ready, setReady] = useState(false);
-  const [visualizerSettings, setVisualizerSettings] = useState({
-    //shape: "circle",
-    //color: 0xffffff,
-    //radius: 50,
-  });
+  const [audioFile, setAudioFile] = useState(null);
+  const [audioUrl, setAudioUrl] = useState(null);
 
   const audioRef = useRef(null);
 
   const videoRef = useRef(null);
+
+  const handleAudioSelected = (file) => {
+    const url = URL.createObjectURL(file);
+    setAudioFile(file);
+    setAudioUrl(url);
+  };
 
   useEffect(() => {
     if (videoRef.current) {
@@ -79,14 +82,16 @@ const Create = () => {
 
       <TabContent>
         {activeTab === "General" && <GeneralTab />}
-        {activeTab === "Audio" && <AudioTab />}
+        {activeTab === "Audio" && (
+          <AudioTab onAudioSelected={handleAudioSelected} />
+        )}
         {activeTab === "Visualizer" && <VisualizerTab />}
         {activeTab === "Background" && <BackgroundTab />}
         {activeTab === "Text" && <TextTab />}
         {activeTab === "Lyrics" && <LyricsTab />}
         {activeTab === "Elements" && <ElementsTab />}
       </TabContent>
-      <MusicPlayerDesktop audioRef={audioRef} />
+      <MusicPlayerDesktop audioRef={audioRef} audioUrl={audioUrl} />
     </MainContainer>
   );
 };
