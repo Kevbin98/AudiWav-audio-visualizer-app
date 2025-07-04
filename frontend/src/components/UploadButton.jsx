@@ -7,7 +7,7 @@ const UploadButton = ({ onAudioSelected }) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
-      onAudioSelected(selectedFile, objectUrl); // 🔄 pass back to parent
+      onAudioSelected(selectedFile, objectUrl);
       setFileInfo({
         name: selectedFile.name,
         size: selectedFile.size,
@@ -17,10 +17,19 @@ const UploadButton = ({ onAudioSelected }) => {
   };
 
   return (
-    <div className='space-y-2'>
-      <input type='file' accept='.mp3,.wav' onChange={handleFileChange} />
+    <div style={styles.mainContainer}>
+      <label style={styles.uploadLabel} className='dark-button'>
+        Choose file
+        <input
+          type='file'
+          accept='.mp3,.wav'
+          onChange={handleFileChange}
+          style={styles.input}
+        />
+      </label>
+
       {fileInfo && (
-        <div className='mb-4 text-sm'>
+        <div style={styles.fileInfo}>
           <p>
             <strong>File:</strong> {fileInfo.name}
           </p>
@@ -34,6 +43,31 @@ const UploadButton = ({ onAudioSelected }) => {
       )}
     </div>
   );
+};
+
+const styles = {
+  mainContainer: {
+    width: "100%",
+    maxWidth: "100%",
+    overflow: "hidden",
+    textAlign: "center",
+  },
+  uploadLabel: {
+    display: "inline-block",
+    cursor: "pointer",
+    padding: "10px 16px",
+    borderRadius: "6px",
+    whiteSpace: "nowrap",
+    maxWidth: "100%",
+  },
+  input: {
+    display: "none",
+  },
+  fileInfo: {
+    marginTop: "15px",
+    fontSize: "0.85rem",
+    color: "#ccc",
+  },
 };
 
 export default UploadButton;
