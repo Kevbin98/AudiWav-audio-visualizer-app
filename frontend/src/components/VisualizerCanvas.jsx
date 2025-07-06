@@ -6,13 +6,12 @@ import shapeRegistry from "../Utils/shapes.js";
 const VisualizerCanvas = ({ settings }) => {
   const canvasRef = useRef(null);
   const appRef = useRef(null);
-  const audioCtxRef = useRef(null); // ✅ persist the context
-  const [ready, setReady] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [drawTrigger, setDrawTrigger] = useState(0);
-  const [analyserReady, setAnalyserReady] = useState(false);
-
+  const audioCtxRef = useRef(null);
   const analyserRef = useRef(null);
+
+  const [ready, setReady] = useState(false);
+  const [analyserReady, setAnalyserReady] = useState(false);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -67,7 +66,6 @@ const VisualizerCanvas = ({ settings }) => {
         window.removeEventListener("click", initializeAudio);
       };
 
-      // 🖱 Wait for user click before initializing AudioContext
       window.addEventListener("click", initializeAudio, { once: true });
 
       const handleResize = () => {
@@ -83,11 +81,7 @@ const VisualizerCanvas = ({ settings }) => {
       return () => {
         window.removeEventListener("resize", handleResize);
         window.removeEventListener("click", initializeAudio);
-        app.destroy(true, {
-          children: true,
-          texture: true,
-          baseTexture: true,
-        });
+        app.destroy(true, { children: true, texture: true, baseTexture: true });
         if (audioCtxRef.current) {
           audioCtxRef.current.close();
           audioCtxRef.current = null;
@@ -99,6 +93,7 @@ const VisualizerCanvas = ({ settings }) => {
     waitUntilReady();
   }, [settings.audioRef]);
 
+  // 🧠 Draw initial non-audio shape
   useEffect(() => {
     const app = appRef.current;
     if (!app || !ready) return;
@@ -113,10 +108,11 @@ const VisualizerCanvas = ({ settings }) => {
       ...settings,
       canvasWidth: app.renderer.width,
       canvasHeight: app.renderer.height,
-      analyser: analyserRef.current || null,
+      analyser: null,
     });
   }, [settings.shape, dimensions, ready]);
 
+  // 🔊 Draw audio shapes once analyser is ready
   useEffect(() => {
     if (!ready || !analyserReady) return;
 
@@ -125,17 +121,29 @@ const VisualizerCanvas = ({ settings }) => {
 
     app.stage.removeChildren();
 
-    const shapeType = settings.shape || "circle";
-    const drawFn = shapeRegistry[shapeType];
-    if (typeof drawFn !== "function") return;
+    const shapes = settings.shapes || [{ type: settings.shape || "circle" }];
+    const cleanupFns = [];
 
-    drawFn(app, {
-      ...settings,
-      canvasWidth: app.renderer.width,
-      canvasHeight: app.renderer.height,
-      analyser: analyserRef.current,
+    shapes.forEach((shapeConfig) => {
+      const drawFn = shapeRegistry[shapeConfig.type];
+      if (typeof drawFn !== "function") return;
+
+      const mergedSettings = {
+        ...settings,
+        ...shapeConfig,
+        canvasWidth: app.renderer.width,
+        canvasHeight: app.renderer.height,
+        analyser: analyserRef.current,
+      };
+
+      const cleanup = drawFn(app, mergedSettings);
+      if (typeof cleanup === "function") cleanupFns.push(cleanup);
     });
-  }, [analyserReady, ready, settings.shape, dimensions]);
+
+    return () => {
+      cleanupFns.forEach((fn) => fn());
+    };
+  }, [analyserReady, ready, settings.shapes, settings.shape, dimensions]);
 
   return <StyledCanvas ref={canvasRef} />;
 };

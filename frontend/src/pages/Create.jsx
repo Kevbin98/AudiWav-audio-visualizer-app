@@ -76,9 +76,9 @@ const Create = () => {
         <CanvasWrapper>
           <VisualizerCanvas
             settings={{
-              shape: "circle",
-              color: 0xffffff,
-              radius: 50,
+              shape: "bassCircleWave",
+              color: 0xff4444,
+              radius: 70,
               audioRef: audioRef,
             }}
           />
