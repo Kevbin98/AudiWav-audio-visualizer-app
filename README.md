@@ -29,7 +29,17 @@ Inspired by platforms like **Specterr** and **Vizzy.io**, Audiwav aims to provid
 
 ## 📸 Screenshots
 
-> _(Add 2–3 screenshots or a short GIF demo here to show UI, upload flow, or profiles)_
+### 🔐 Login Page
+
+![Login Page](./screenshots/login.png)
+
+### 🎨 Visualizer Editor
+
+![Visualizer Editor](./screenshots/editor.png)
+
+### 🧑‍🎨 User Profile
+
+![User Profile](./screenshots/profile.png)
 
 ---
 
@@ -52,5 +62,5 @@ Cloning for educational or employer review is allowed.
 
 ## 👤 Author
 
-Made by **Kevin [Your Last Name]**  
-[🔗 LinkedIn](https://your-linkedin.com) • [🌐 Portfolio](https://your-portfolio.com)
+Made by **Kevin Barany**  
+[🔗 LinkedIn](https://www.linkedin.com/feed/) • [🌐 Portfolio](https://kevdev-portfolio.netlify.app/home)
