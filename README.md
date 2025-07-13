@@ -1,12 +1,56 @@
-# React + Vite
+# 🎧 Audiwav
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Audiwav** is a SaaS web application in active development, built for content creators, musicians, and streamers to generate professional audio visualizers using their own uploaded tracks.
 
-Currently, two official plugins are available:
+Inspired by platforms like **Specterr** and **Vizzy.io**, Audiwav aims to provide a modern, mobile-friendly, and affordable alternative for creators.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+> 🚧 **Note:** Audiwav is currently under development. Core features like real-time visualizer customization and audio rendering are still being built. However, user authentication, profile management, and cloud-based project storage are fully functional.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🚀 Core Features (So Far)
+
+- 🔐 **User Authentication & Authorization** via Firebase
+- 🧑‍🎨 **User Profiles** with support for uploaded visualizer projects
+- ☁️ **Firestore Integration** for storing user data and project metadata
+- 📁 **Firebase Storage** for handling music file uploads
+- 📱 **Responsive UI** built for both desktop and mobile
+- 💻 **Built with React + PixiJS** for future visualizer rendering
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** React, PixiJS, Bootstrap
+- **Backend:** Firebase (Auth, Firestore, Storage)
+- **Other:** Web Audio API, GSAP
+
+---
+
+## 📸 Screenshots
+
+> _(Add 2–3 screenshots or a short GIF demo here to show UI, upload flow, or profiles)_
+
+---
+
+## 📦 Roadmap
+
+- 🎞️ Video export functionality using FFmpeg
+- 🎨 Real-time visualizer rendering and shape animation
+- 💎 Visualizer presets + customization marketplace
+- 💰 Premium SaaS subscription tier
+
+---
+
+## ⚠️ **License Notice**
+
+Audiwav is **not open source**. This repository is public for demonstration and evaluation purposes only.  
+Cloning for educational or employer review is allowed.  
+**Reuse, modification, or redistribution is strictly prohibited.**
+
+---
+
+## 👤 Author
+
+Made by **Kevin [Your Last Name]**  
+[🔗 LinkedIn](https://your-linkedin.com) • [🌐 Portfolio](https://your-portfolio.com)
